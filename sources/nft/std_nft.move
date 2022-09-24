@@ -24,6 +24,8 @@ module nft_protocol::std_nft {
         name: String,
         index: u64,
         url: Url,
+        animation_url: Url,
+        description: String,
         attributes: Attributes
     }
 
@@ -37,6 +39,8 @@ module nft_protocol::std_nft {
         name: String,
         index: u64,
         url: Url,
+        animation_url: Url,
+        description: String,
         primary_sales_happened: bool,
         is_mutable: bool,
         attributes: Attributes,
@@ -67,6 +71,8 @@ module nft_protocol::std_nft {
         // Url of the NFT. This parameter is a vector of bytes that
         // encondes to utf8 and will be stored in the NFT object as a Url
         url: vector<u8>,
+        animation_url: vector<u8>,
+        description: vector<u8>,
         is_mutable: bool,
         // A vector of attribute keys, expressed in a vector of bytes that
         // encode to utf8. The attribute keys are stored as a String in the
@@ -96,6 +102,8 @@ module nft_protocol::std_nft {
             string::utf8(name),
             current_supply + 1,
             url::new_unsafe_from_bytes(url),
+            url::new_unsafe_from_bytes(animation_url),
+            string::utf8(description),
             false,
             is_mutable,
             attribute_keys,
@@ -132,6 +140,8 @@ module nft_protocol::std_nft {
         // Url of the NFT. This parameter is a vector of bytes that
         // encondes to utf8 and will be stored in the Nft object as a Url
         url: vector<u8>,
+        animation_url: vector<u8>,
+        description: vector<u8>,
         is_mutable: bool,
         // A vector of attribute keys, expressed in a vector of bytes that
         // encode to utf8. The attribute keys are stored as a String in the
@@ -163,6 +173,8 @@ module nft_protocol::std_nft {
             string::utf8(name),
             current_supply + 1,
             url::new_unsafe_from_bytes(url),
+            url::new_unsafe_from_bytes(animation_url),
+            string::utf8(description),
             false,
             is_mutable,
             attribute_keys,
@@ -238,6 +250,8 @@ module nft_protocol::std_nft {
             index: _,
             url: _,
             attributes: _,
+            description: _,
+            animation_url: _,
         } = metadata;
 
         // Delete nft metadata
@@ -267,6 +281,20 @@ module nft_protocol::std_nft {
         meta.url
     }
 
+    /// Get the Nft Meta's `description`
+    public fun description(
+        meta: &NftMeta,
+    ): String {
+        meta.description
+    }
+
+    /// Get the Nft Meta's `url`
+    public fun animation_url(
+        meta: &NftMeta,
+    ): Url {
+        meta.animation_url
+    }
+
     /// Get the Nft Meta's `attributes`
     public fun attributes(
         meta: &NftMeta,
@@ -280,6 +308,8 @@ module nft_protocol::std_nft {
         name: String,
         index: u64,
         url: Url,
+        animation_url: Url,
+        description: String,
         primary_sales_happened: bool,
         is_mutable: bool,
         attribute_keys: vector<vector<u8>>,
@@ -294,6 +324,8 @@ module nft_protocol::std_nft {
             name,
             index,
             url,
+            animation_url,
+            description,
             primary_sales_happened,
             is_mutable,
             attributes,
@@ -311,6 +343,8 @@ module nft_protocol::std_nft {
             name: args.name,
             index: args.index,
             url: args.url,
+            animation_url: args.animation_url,
+            description: args.description,
             attributes: args.attributes,
         };
 

@@ -8,6 +8,7 @@ module nft_protocol::std_collection {
     use std::vector;
     use std::string::{Self, String};
     use sui::transfer;
+    use sui::url::{Self, Url};
     use sui::object::{Self, ID, UID};
     use sui::tx_context::{TxContext};
     use nft_protocol::collection::{Self, Collection};
@@ -21,6 +22,8 @@ module nft_protocol::std_collection {
         id: UID,
         royalty_fee_bps: u64,
         creators: vector<Creator>,
+        description: String,
+        externel_url: Url,
         data: String,
     }
 
@@ -67,6 +70,8 @@ module nft_protocol::std_collection {
         // project owners to add any arbitrary string data to the Collection
         // object.
         data: vector<u8>,
+        description: vector<u8>,
+        externel_url: vector<u8>,
         recipient: address,
         ctx: &mut TxContext,
     ) {
@@ -87,6 +92,8 @@ module nft_protocol::std_collection {
             royalty_fee_bps: args.royalty_fee_bps,
             creators: vector::empty(),
             data: args.data,
+            description: string::utf8(description),
+            externel_url: url::new_unsafe_from_bytes(externel_url),
         };
 
         let collection_args = collection::init_args(
@@ -138,6 +145,8 @@ module nft_protocol::std_collection {
         royalty_fee_bps: u64,
         is_mutable: bool,
         data: vector<u8>,
+        description: vector<u8>,
+        externel_url: vector<u8>,
         ctx: &mut TxContext,
     ) {
         let args = init_args(
@@ -157,6 +166,8 @@ module nft_protocol::std_collection {
             royalty_fee_bps: args.royalty_fee_bps,
             creators: vector::empty(),
             data: args.data,
+            description: string::utf8(description),
+            externel_url: url::new_unsafe_from_bytes(externel_url),
         };
 
         let collection_args = collection::init_args(
@@ -208,6 +219,8 @@ module nft_protocol::std_collection {
             royalty_fee_bps: _,
             creators: _,
             data: _,
+            description: _,
+            externel_url: _,
         } = metadata;
 
         // Delete collection metadata
@@ -279,6 +292,20 @@ module nft_protocol::std_collection {
         meta.data
     }
 
+    /// Get the Collection Meta's `description`
+    public fun description(
+        meta: &CollectionMeta,
+    ): String {
+        meta.description
+    }
+
+    /// Get the Collection Meta's `externel_url`
+    public fun externel_url(
+        meta: &CollectionMeta,
+    ): Url {
+        meta.externel_url
+    }
+
 
     // === Private Functions ===
 
@@ -338,6 +365,7 @@ module nft_protocol::std_collection {
 module nft_protocol::std_collection_tests {
     use std::vector::{Self};
     use std::string::{Self};
+    use sui::url::{Self};
     use sui::test_scenario;
     use nft_protocol::collection::{Self, Collection};
     use nft_protocol::std_collection::{Self, StdCollection, CollectionMeta};
@@ -368,6 +396,8 @@ module nft_protocol::std_collection_tests {
             5, // royalty_fee_bps
             false, // is_mutable
             b"", // data
+            b"Yellow Submarines NFT", // description
+            b"http://example.com", // externel_url
             test_scenario::ctx(&mut scenario)
         );
 
@@ -407,6 +437,14 @@ module nft_protocol::std_collection_tests {
 
         assert!(
             std_collection::data(collection::metadata(coll)) == string::utf8(b""),
+        0);
+
+        assert!(
+            std_collection::description(collection::metadata(coll)) == string::utf8(b"Yellow Submarines NFT"),
+        0);
+
+        assert!(
+            std_collection::externel_url(collection::metadata(coll)) == url::new_unsafe_from_bytes(b"http://example.com"),
         0);
 
         assert!(

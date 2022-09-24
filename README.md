@@ -109,6 +109,8 @@ The standard collection metadata object, `CollectionMeta`, has the following dat
 | `id`              | `UID`             | The UID of the standard collection metadata object |
 | `royalty_fee_bps` | `u64`             | The royalty fees creators accumulate on the sale of NFTs * |
 | `creators`        | `vector<Creator>` | A vector containing the information of the creators |
+| `description`     | `String`          | The description of the collection. |
+| `external_url`    | `String`          | The external URL defining the asset, e.g. the main site of a game. |
 | `data`            | `String`          | An open string field to add any arbitrary data |
 
 * `royalty_fee_bps` is currently not being utilized but will be used in the standard launchpad module.
@@ -131,6 +133,8 @@ and the following getter functions:
 - `royalty`
 - `creators`
 - `data`
+- `description`
+- `external_url`
 
 
 ### NFT
@@ -167,7 +171,9 @@ Standard NFT metadata object, `NftMeta`, has the following data model:
 | `id`              | `UID`             | The UID of the NFT metadata object |
 | `name`            | `String`          | Name of the NFT object |
 | `index`           | `u64`             | The index of the NFT in relation to the whole collection |
-| `url`             | `Url`             | The URL of the NFT |
+| `url`             | `Url`             | The URL pointing to the image of the NFT |
+| `animation_url`   | `Url`             | The URL pointing to the animation of the NFT |
+| `description`     | `String`          | The description of the NFT. |
 | `attributes`      | `Attributes`      | Attributes of a given NFT |
 
 
@@ -184,6 +190,8 @@ and the following getter functions:
 - `name`
 - `index`
 - `url`
+- `description`
+- `animation_url`
 - `attributes`
 
 ### Slingshot Launchpad
